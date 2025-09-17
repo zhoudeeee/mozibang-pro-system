@@ -1,0 +1,16 @@
+{
+  "userId": "test-user-id",
+  "status": "active",
+  "plan": "pro",
+  "activatedAt": "2024-01-15T10:30:00Z",
+  "expiresAt": null,
+  "features": {
+    "unlimitedExport": true,
+    "batchExtraction": true,
+    "advancedFilters": true
+  },
+  "metadata": {
+    "version": "1.0",
+    "createdBy": "system"
+  }
+}
