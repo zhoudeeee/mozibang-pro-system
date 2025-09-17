@@ -1,12 +1,84 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-    <title>MoziBang Pro License System</title>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>墨字帮支付系统测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .test-links {
+            display: grid;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .test-link {
+            display: block;
+            padding: 15px 20px;
+            background: #007cba;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+        .test-link:hover {
+            background: #005a87;
+        }
+        .description {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+    </style>
 </head>
 <body>
-    <h1>MoziBang Pro License System</h1>
-    <p>This is the license verification system for MoziBang Pro.</p>
-    <p>License files are located in the /licenses/ directory.</p>
+    <div class="container">
+        <h1>墨字帮支付系统测试页面</h1>
+        <div class="description">
+            <p>欢迎使用墨字帮支付系统测试环境。请选择要测试的功能：</p>
+        </div>
+        
+        <div class="test-links">
+            <a href="payment-flow-test.html" class="test-link">
+                支付流程完整测试
+            </a>
+            <a href="pay.html?userId=test-user-123" class="test-link">
+                支付页面测试 (带测试用户ID)
+            </a>
+            <a href="popup.html" class="test-link">
+                插件弹窗测试
+            </a>
+            <a href="test.html" class="test-link">
+                基础功能测试
+            </a>
+        </div>
+        
+        <div style="margin-top: 30px; padding: 15px; background: #e8f4f8; border-radius: 5px;">
+            <h3>测试说明：</h3>
+            <ul>
+                <li>支付流程完整测试：包含用户ID生成、支付页面、许可证验证等完整流程</li>
+                <li>支付页面测试：直接测试pay.html页面功能</li>
+                <li>插件弹窗测试：测试Chrome扩展的弹窗界面</li>
+                <li>基础功能测试：测试基础的系统功能</li>
+            </ul>
+        </div>
+    </div>
 </body>
 </html>
