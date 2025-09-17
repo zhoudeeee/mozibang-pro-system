@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>墨字帮支付流程完整测试</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+        h2 {
+            color: #007cba;
+            border-bottom: 2px solid #007cba;
+            padding-bottom: 10px;
+            margin-top: 30px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #f9f9f9;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            margin: 10px 5px;
+            background: #007cba;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        .btn:hover {
+            background: #005a87;
+            transform: translateY(-2px);
+        }
+        .btn-success {
+            background: #28a745;
+        }
+        .btn-success:hover {
+            background: #218838;
+        }
+        .btn-warning {
+            background: #ffc107;
+            color: #333;
+        }
+        .btn-warning:hover {
+            background: #e0a800;
+        }
+        .result {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .result.success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .result.error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .result.info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        .status-success {
+            background: #28a745;
+        }
+        .status-error {
+            background: #dc3545;
+        }
+        .status-pending {
+            background: #ffc107;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 墨字帮支付流程完整测试</h1>
+        <p style="text-align: center; color: #666; font-size: 16px;">测试支付系统的各个组件和完整流程</p>
+        
+        <div class="grid">
+            <!-- 用户ID管理测试 -->
+            <div class="test-section">
+                <h2>👤 用户ID管理测试</h2>
+                <p>测试用户ID的生成、存储和获取功能</p>
+                
+                <button class="btn" onclick="generateUserId()">生成新用户ID</button>
+                <button class="btn btn-warning" onclick="getUserId()">获取当前用户ID</button>
+                <button class="btn btn-warning" onclick="clearUserId()">清除用户ID</button>
+                
+                <div id="userIdResult" class="result info" style="display: none;"></div>
+            </div>
+            
+            <!-- 支付页面测试 -->
+            <div class="test-section">
+                <h2>💳 支付页面测试</h2>
+                <p>测试pay.html页面的功能和用户ID传递</p>
+                
+                <button class="btn" onclick="openPaymentPage()">打开支付页面</button>
+                <button class="btn btn-success" onclick="openPaymentPageWithTestId()">使用测试ID打开</button>
+                
+                <div id="paymentResult" class="result info" style="display: none;"></div>
+            </div>
+            
+            <!-- 许可证系统测试 -->
+            <div class="test-section">
+                <h2>🔐 许可证系统测试</h2>
+                <p>测试Pro许可证的验证和状态管理</p>
+                
+                <button class="btn" onclick="checkLicenseStatus()">检查许可证状态</button>
+                <button class="btn btn-success" onclick="simulateProUpgrade()">模拟Pro升级</button>
+                <button class="btn btn-warning" onclick="resetToFree()">重置为免费版</button>
+                
+                <div id="licenseResult" class="result info" style="display: none;"></div>
+            </div>
+            
+            <!-- 存储系统测试 -->
+            <div class="test-section">
+                <h2>💾 存储系统测试</h2>
+                <p>测试本地存储和数据管理功能</p>
+                
+                <button class="btn" onclick="testStorage()">测试存储功能</button>
+                <button class="btn btn-warning" onclick="clearAllStorage()">清除所有存储</button>
+                
+                <div id="storageResult" class="result info" style="display: none;"></div>
+            </div>
+            
+            <!-- PaymentManager测试 -->
+            <div class="test-section">
+                <h2>🏪 PaymentManager测试</h2>
+                <p>测试内置支付管理器的弹窗功能</p>
+                
+                <button class="btn" onclick="testPaymentManager()">测试升级弹窗</button>
+                <button class="btn btn-success" onclick="testPersonalPayment()">测试个人收款弹窗</button>
+                
+                <div id="paymentManagerResult" class="result info" style="display: none;"></div>
+            </div>
+            
+            <!-- 完整流程测试 -->
+            <div class="test-section">
+                <h2>🔄 完整流程测试</h2>
+                <p>模拟从免费版到Pro版的完整升级流程</p>
+                
+                <button class="btn btn-success" onclick="runFullTest()">运行完整测试</button>
+                <button class="btn btn-warning" onclick="resetTestEnvironment()">重置测试环境</button>
+                
+                <div id="fullTestResult" class="result info" style="display: none;"></div>
+            </div>
+        </div>
+        
+        <!-- 系统状态显示 -->
+        <div class="test-section" style="margin-top: 30px;">
+            <h2>📊 系统状态</h2>
+            <div id="systemStatus">
+                <p><span class="status-indicator status-pending"></span>等待测试...</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 引入必要的脚本 -->
+    <script src="mozibang-storage.js"></script>
+    <script src="payment.js"></script>
+    <script src="license.js"></script>
+    
+    <script>
+        // 全局变量
+        let storageAdapter;
+        let testResults = {};
+        
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                storageAdapter = new MoziBangStorageAdapter();
+                updateSystemStatus('初始化完成', 'success');
+            } catch (error) {
+                updateSystemStatus('初始化失败: ' + error.message, 'error');
+            }
+        });
+        
+        // 更新系统状态
+        function updateSystemStatus(message, type = 'info') {
+            const statusDiv = document.getElementById('systemStatus');
+            const statusClass = type === 'success' ? 'status-success' : 
+                              type === 'error' ? 'status-error' : 'status-pending';
+            const timestamp = new Date().toLocaleTimeString();
+            
+            statusDiv.innerHTML = `
+                <p><span class="status-indicator ${statusClass}"></span>${message}</p>
+                <small style="color: #666;">最后更新: ${timestamp}</small>
+            `;
+        }
+        
+        // 显示结果
+        function showResult(elementId, message, type = 'info') {
+            const resultDiv = document.getElementById(elementId);
+            resultDiv.className = `result ${type}`;
+            resultDiv.textContent = message;
+            resultDiv.style.display = 'block';
+        }
+        
+        // 用户ID管理功能
+        function generateUserId() {
+            try {
+                if (storageAdapter) {
+                    const userId = storageAdapter.generateUUID();
+                    storageAdapter.setUserId(userId);
+                    showResult('userIdResult', `新用户ID已生成: ${userId}`, 'success');
+                    updateSystemStatus('用户ID生成成功', 'success');
+                } else {
+                    throw new Error('存储适配器未初始化');
+                }
+            } catch (error) {
+                showResult('userIdResult', `生成用户ID失败: ${error.message}`, 'error');
+                updateSystemStatus('用户ID生成失败', 'error');
+            }
+        }
+        
+        function getUserId() {
+            try {
+                if (storageAdapter) {
+                    const userId = storageAdapter.getUserId();
+                    if (userId) {
+                        showResult('userIdResult', `当前用户ID: ${userId}`, 'info');
+                    } else {
+                        showResult('userIdResult', '未找到用户ID，请先生成', 'error');
+                    }
+                } else {
+                    throw new Error('存储适配器未初始化');
+                }
+            } catch (error) {
+                showResult('userIdResult', `获取用户ID失败: ${error.message}`, 'error');
+            }
+        }
+        
+        function clearUserId() {
+            try {
+                localStorage.removeItem('mozibang_userId');
+                showResult('userIdResult', '用户ID已清除', 'success');
+                updateSystemStatus('用户ID已清除', 'success');
+            } catch (error) {
+                showResult('userIdResult', `清除用户ID失败: ${error.message}`, 'error');
+            }
+        }
+        
+        // 支付页面功能
+        function openPaymentPage() {
+            try {
+                const userId = storageAdapter ? storageAdapter.getUserId() : null;
+                if (!userId) {
+                    showResult('paymentResult', '请先生成用户ID', 'error');
+                    return;
+                }
+                
+                const payUrl = `pay.html?userId=${encodeURIComponent(userId)}`;
+                window.open(payUrl, '_blank');
+                showResult('paymentResult', `支付页面已打开，用户ID: ${userId}`, 'success');
+                updateSystemStatus('支付页面已打开', 'success');
+            } catch (error) {
+                showResult('paymentResult', `打开支付页面失败: ${error.message}`, 'error');
+            }
+        }
+        
+        function openPaymentPageWithTestId() {
+            const testUserId = 'mozibang-test-' + Date.now();
+            const payUrl = `pay.html?userId=${encodeURIComponent(testUserId)}`;
+            window.open(payUrl, '_blank');
+            showResult('paymentResult', `测试支付页面已打开，测试ID: ${testUserId}`, 'success');
+        }
+        
+        // 许可证系统功能
+        function checkLicenseStatus() {
+            try {
+                const isPro = localStorage.getItem('mozibang_isPro') === 'true';
+                const licenseKey = localStorage.getItem('mozibang_licenseKey');
+                const expiryDate = localStorage.getItem('mozibang_licenseExpiry');
+                
+                let statusMessage = `Pro状态: ${isPro ? '已激活' : '未激活'}\n`;
+                if (licenseKey) {
+                    statusMessage += `许可证密钥: ${licenseKey}\n`;
+                }
+                if (expiryDate) {
+                    statusMessage += `到期时间: ${new Date(expiryDate).toLocaleString()}`;
+                }
+                
+                showResult('licenseResult', statusMessage, isPro ? 'success' : 'info');
+                updateSystemStatus(`许可证状态: ${isPro ? 'Pro' : '免费版'}`, isPro ? 'success' : 'pending');
+            } catch (error) {
+                showResult('licenseResult', `检查许可证失败: ${error.message}`, 'error');
+            }
+        }
+        
+        function simulateProUpgrade() {
+            try {
+                const licenseKey = 'test-license-' + Date.now();
+                const expiryDate = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000); // 1年后
+                
+                localStorage.setItem('mozibang_isPro', 'true');
+                localStorage.setItem('mozibang_licenseKey', licenseKey);
+                localStorage.setItem('mozibang_licenseExpiry', expiryDate.toISOString());
+                
+                showResult('licenseResult', `Pro升级模拟成功!\n许可证: ${licenseKey}\n到期: ${expiryDate.toLocaleString()}`, 'success');
+                updateSystemStatus('已升级到Pro版', 'success');
+            } catch (error) {
+                showResult('licenseResult', `模拟升级失败: ${error.message}`, 'error');
+            }
+        }
+        
+        function resetToFree() {
+            try {
+                localStorage.removeItem('mozibang_isPro');
+                localStorage.removeItem('mozibang_licenseKey');
+                localStorage.removeItem('mozibang_licenseExpiry');
+                
+                showResult('licenseResult', '已重置为免费版', 'success');
+                updateSystemStatus('已重置为免费版', 'success');
+            } catch (error) {
+                showResult('licenseResult', `重置失败: ${error.message}`, 'error');
+            }
+        }
+        
+        // 存储系统测试
+        function testStorage() {
+            try {
+                const testData = {
+                    timestamp: Date.now(),
+                    testString: '测试数据',
+                    testNumber: 12345,
+                    testArray: [1, 2, 3]
+                };
+                
+                // 测试存储
+                localStorage.setItem('mozibang_test', JSON.stringify(testData));
+                
+                // 测试读取
+                const retrieved = JSON.parse(localStorage.getItem('mozibang_test'));
+                
+                if (JSON.stringify(testData) === JSON.stringify(retrieved)) {
+                    showResult('storageResult', '存储系统测试通过!\n数据写入和读取正常', 'success');
+                    updateSystemStatus('存储系统正常', 'success');
+                } else {
+                    throw new Error('数据不匹配');
+                }
+            } catch (error) {
+                showResult('storageResult', `存储测试失败: ${error.message}`, 'error');
+                updateSystemStatus('存储系统异常', 'error');
+            }
+        }
+        
+        function clearAllStorage() {
+            try {
+                const keys = Object.keys(localStorage).filter(key => key.startsWith('mozibang_'));
+                keys.forEach(key => localStorage.removeItem(key));
+                
+                showResult('storageResult', `已清除 ${keys.length} 个存储项目:\n${keys.join('\n')}`, 'success');
+                updateSystemStatus('存储已清空', 'success');
+            } catch (error) {
+                showResult('storageResult', `清除存储失败: ${error.message}`, 'error');
+            }
+        }
+        
+        // PaymentManager测试
+        function testPaymentManager() {
+            try {
+                if (typeof window.PaymentManager !== 'undefined') {
+                    window.PaymentManager.showUpgradeDialog();
+                    showResult('paymentManagerResult', 'PaymentManager升级弹窗已打开', 'success');
+                } else {
+                    showResult('paymentManagerResult', 'PaymentManager未加载，这是正常的（仅在Chrome扩展中可用）', 'info');
+                }
+            } catch (error) {
+                showResult('paymentManagerResult', `PaymentManager测试失败: ${error.message}`, 'error');
+            }
+        }
+        
+        function testPersonalPayment() {
+            try {
+                if (typeof window.PaymentManager !== 'undefined') {
+                    window.PaymentManager.showPersonalPaymentDialog();
+                    showResult('paymentManagerResult', 'PaymentManager个人收款弹窗已打开', 'success');
+                } else {
+                    showResult('paymentManagerResult', 'PaymentManager未加载，这是正常的（仅在Chrome扩展中可用）', 'info');
+                }
+            } catch (error) {
+                showResult('paymentManagerResult', `个人收款测试失败: ${error.message}`, 'error');
+            }
+        }
+        
+        // 完整流程测试
+        function runFullTest() {
+            showResult('fullTestResult', '开始运行完整测试...', 'info');
+            
+            let testLog = '=== 完整流程测试 ===\n';
+            let allPassed = true;
+            
+            try {
+                // 1. 清理环境
+                testLog += '1. 清理测试环境...\n';
+                clearAllStorage();
+                
+                // 2. 生成用户ID
+                testLog += '2. 生成用户ID...\n';
+                if (storageAdapter) {
+                    const userId = storageAdapter.generateUUID();
+                    storageAdapter.setUserId(userId);
+                    testLog += `   ✓ 用户ID: ${userId}\n`;
+                } else {
+                    throw new Error('存储适配器未初始化');
+                }
+                
+                // 3. 测试存储
+                testLog += '3. 测试存储功能...\n';
+                localStorage.setItem('mozibang_test', 'test-value');
+                if (localStorage.getItem('mozibang_test') === 'test-value') {
+                    testLog += '   ✓ 存储功能正常\n';
+                } else {
+                    throw new Error('存储功能异常');
+                }
+                
+                // 4. 模拟支付流程
+                testLog += '4. 模拟支付流程...\n';
+                const testLicense = 'full-test-license-' + Date.now();
+                localStorage.setItem('mozibang_isPro', 'true');
+                localStorage.setItem('mozibang_licenseKey', testLicense);
+                testLog += `   ✓ Pro许可证已激活: ${testLicense}\n`;
+                
+                // 5. 验证Pro状态
+                testLog += '5. 验证Pro状态...\n';
+                const isPro = localStorage.getItem('mozibang_isPro') === 'true';
+                if (isPro) {
+                    testLog += '   ✓ Pro状态验证通过\n';
+                } else {
+                    throw new Error('Pro状态验证失败');
+                }
+                
+                testLog += '\n=== 测试完成 ===\n所有测试项目均通过! 🎉';
+                showResult('fullTestResult', testLog, 'success');
+                updateSystemStatus('完整测试通过', 'success');
+                
+            } catch (error) {
+                testLog += `\n❌ 测试失败: ${error.message}`;
+                showResult('fullTestResult', testLog, 'error');
+                updateSystemStatus('完整测试失败', 'error');
+            }
+        }
+        
+        function resetTestEnvironment() {
+            try {
+                clearAllStorage();
+                
+                // 清除所有结果显示
+                const resultDivs = document.querySelectorAll('.result');
+                resultDivs.forEach(div => {
+                    div.style.display = 'none';
+                });
+                
+                showResult('fullTestResult', '测试环境已重置', 'success');
+                updateSystemStatus('测试环境已重置', 'success');
+            } catch (error) {
+                showResult('fullTestResult', `重置失败: ${error.message}`, 'error');
+            }
+        }
+    </script>
+</body>
+</html>
