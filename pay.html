@@ -3,17 +3,235 @@
 <head>
     <title>MoziBang Pro 升级</title>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .payment-container {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        h2 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+            font-weight: 600;
+        }
+        
+        .payment-container > p {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        
+        .qr-codes {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0;
+            gap: 20px;
+        }
+        
+        .qr-item {
+            flex: 1;
+            padding: 20px;
+            border: 2px solid #f0f0f0;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .qr-item:hover {
+            border-color: #4285f4;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(66, 133, 244, 0.15);
+        }
+        
+        .qr-item h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 18px;
+            font-weight: 500;
+        }
+        
+        .qr-item img {
+            width: 150px;
+            height: 150px;
+            border-radius: 8px;
+            border: 1px solid #eee;
+        }
+        
+        .instructions {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px 0;
+            text-align: left;
+        }
+        
+        .instructions h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 18px;
+            font-weight: 500;
+            text-align: center;
+        }
+        
+        .instructions ol {
+            color: #555;
+            line-height: 1.6;
+            padding-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+        
+        .instructions code {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .user-id-display {
+            background: #e8f5e8;
+            border: 2px solid #4caf50;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        
+        .user-id-display p {
+            color: #2e7d32;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+        
+        .user-id-value {
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            font-weight: 600;
+            color: #1b5e20;
+            word-break: break-all;
+        }
+        
+        .payment-actions {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-primary {
+            background: #4285f4;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #3367d6;
+            transform: translateY(-1px);
+        }
+        
+        .btn-secondary {
+            background: #f1f3f4;
+            color: #5f6368;
+        }
+        
+        .btn-secondary:hover {
+            background: #e8eaed;
+        }
+        
+        .status-message {
+            margin-top: 20px;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 500;
+            display: none;
+        }
+        
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        @media (max-width: 600px) {
+            .payment-container {
+                padding: 30px 20px;
+            }
+            
+            .qr-codes {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .qr-item img {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .payment-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="payment-container">
         <h2>升级到 MoziBang Pro</h2>
         <p>价格：¥9.9 (一次性付费，永久使用)</p>
         
+        <div class="user-id-display">
+            <p>您的用户ID：</p>
+            <div class="user-id-value" id="user-id">正在获取...</div>
+        </div>
+        
         <div class="qr-codes">
             <div class="qr-item">
                 <h3>支付宝</h3>
                 <img src="images/alipay-qr.png" alt="支付宝收款码">
-            div>
+            </div>
             <div class="qr-item">
                 <h3>微信支付</h3>
                 <img src="images/wechat-qr.png" alt="微信收款码">
@@ -23,18 +241,95 @@
         <div class="instructions">
             <h3>付款步骤：</h3>
             <ol>
-                <li>扫描上方二维码</li>
-                <li>在备注中填写：<code id="user-id"></code></li>
-                <li>完成付款后，回到扩展点击"我已付款"</li>
+                <li>扫描上方二维码完成付款</li>
+                <li>在付款备注中填写您的用户ID</li>
+                <li>付款完成后点击下方"我已付款"按钮</li>
+                <li>等待管理员确认，系统将自动激活Pro功能</li>
             </ol>
         </div>
+        
+        <div class="payment-actions">
+            <button class="btn btn-primary" id="confirm-payment">我已付款</button>
+            <button class="btn btn-secondary" id="copy-userid">复制用户ID</button>
+        </div>
+        
+        <div class="status-message" id="status-message"></div>
     </div>
     
     <script>
         // 从URL获取用户ID
         const urlParams = new URLSearchParams(window.location.search);
         const userId = urlParams.get('u');
-        document.getElementById('user-id').textContent = userId || '用户ID获取失败';
+        const userIdElement = document.getElementById('user-id');
+        const statusMessage = document.getElementById('status-message');
+        
+        // 显示用户ID
+        if (userId) {
+            userIdElement.textContent = userId;
+        } else {
+            userIdElement.textContent = '用户ID获取失败';
+            userIdElement.style.color = '#d32f2f';
+        }
+        
+        // 复制用户ID功能
+        document.getElementById('copy-userid').addEventListener('click', async () => {
+            if (userId) {
+                try {
+                    await navigator.clipboard.writeText(userId);
+                    showStatus('用户ID已复制到剪贴板', 'success');
+                } catch (err) {
+                    // 降级方案
+                    const textArea = document.createElement('textarea');
+                    textArea.value = userId;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textArea);
+                    showStatus('用户ID已复制到剪贴板', 'success');
+                }
+            } else {
+                showStatus('无法复制：用户ID无效', 'error');
+            }
+        });
+        
+        // 确认付款功能
+        document.getElementById('confirm-payment').addEventListener('click', () => {
+            if (!userId) {
+                showStatus('错误：用户ID无效，无法提交付款确认', 'error');
+                return;
+            }
+            
+            // 这里可以添加向后端提交付款确认的逻辑
+            showStatus('付款确认已提交，请等待管理员审核激活', 'success');
+            
+            // 可选：关闭当前窗口或跳转
+            setTimeout(() => {
+                if (window.opener) {
+                    window.close();
+                } else {
+                    showStatus('请返回扩展程序查看激活状态', 'success');
+                }
+            }, 3000);
+        });
+        
+        // 显示状态消息
+        function showStatus(message, type) {
+            statusMessage.textContent = message;
+            statusMessage.className = `status-message status-${type}`;
+            statusMessage.style.display = 'block';
+            
+            // 3秒后自动隐藏
+            setTimeout(() => {
+                statusMessage.style.display = 'none';
+            }, 3000);
+        }
+        
+        // 页面加载完成提示
+        window.addEventListener('load', () => {
+            if (userId) {
+                showStatus('支付页面加载完成，请按步骤完成付款', 'success');
+            }
+        });
     </script>
 </body>
 </html>
