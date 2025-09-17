@@ -2,7 +2,7 @@
 class MoziBangPayment {
     constructor() {
         this.storage = window.moziBangStorage;
-        this.backendUrl = 'https://mozibang.com/mozibang'; // 更新为实际后端地址
+        this.backendUrl = 'https://zhoudeeee.github.io/mozibang-pro-system/'; // 更新为正确的后端地址
     }
     
     // 显示升级页面
@@ -155,4 +155,5 @@ window.moziBangPayment = new MoziBangPayment();
 function redirectToSuccess(orderId) {
     // 更新跳转URL
     window.location.href = `mozibang-payment-success.html?orderId=${orderId}`;
+
 }
