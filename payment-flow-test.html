@@ -489,18 +489,19 @@
         
         function resetTestEnvironment() {
             try {
+                // 清除所有测试数据
                 clearAllStorage();
                 
-                // 清除所有结果显示
+                // 重置所有结果显示
                 const resultDivs = document.querySelectorAll('.result');
                 resultDivs.forEach(div => {
                     div.style.display = 'none';
+                    div.textContent = '';
                 });
                 
-                showResult('fullTestResult', '测试环境已重置', 'success');
                 updateSystemStatus('测试环境已重置', 'success');
             } catch (error) {
-                showResult('fullTestResult', `重置失败: ${error.message}`, 'error');
+                updateSystemStatus('重置失败: ' + error.message, 'error');
             }
         }
     </script>
