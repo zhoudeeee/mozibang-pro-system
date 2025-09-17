@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MoziBang Pro 升级</title>
+    <meta charset="utf-8">
+</head>
+<body>
+    <div class="payment-container">
+        <h2>升级到 MoziBang Pro</h2>
+        <p>价格：¥9.9 (一次性付费，永久使用)</p>
+        
+        <div class="qr-codes">
+            <div class="qr-item">
+                <h3>支付宝</h3>
+                <img src="images/alipay-qr.png" alt="支付宝收款码">
+            div>
+            <div class="qr-item">
+                <h3>微信支付</h3>
+                <img src="images/wechat-qr.png" alt="微信收款码">
+            </div>
+        </div>
+        
+        <div class="instructions">
+            <h3>付款步骤：</h3>
+            <ol>
+                <li>扫描上方二维码</li>
+                <li>在备注中填写：<code id="user-id"></code></li>
+                <li>完成付款后，回到扩展点击"我已付款"</li>
+            </ol>
+        </div>
+    </div>
+    
+    <script>
+        // 从URL获取用户ID
+        const urlParams = new URLSearchParams(window.location.search);
+        const userId = urlParams.get('u');
+        document.getElementById('user-id').textContent = userId || '用户ID获取失败';
+    </script>
+</body>
+</html>
